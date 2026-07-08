@@ -104,7 +104,18 @@ def busqueda_multa(multa_min, multa_max,dict_libros, dict_prestamos):
         else:
             print(sorted(lista_multa))
         
+def buscar_codigo(codigo,dict_libros):
+    for codigo_libro in dict_libros.keys():
+        if codigo == codigo_libro:
+            return True
+    return False
 
+def actualizar_multa(codigo,nueva_multa,dict_prestamos):
+    if buscar_codigo(codigo,libros):
+        dict_prestamos[codigo][0] = nueva_multa
+        return True
+    else:
+        return False
 
 libros = {
 'L001': ['Sombras del Sur', 'A. Rojas', 'novela', 2019,
@@ -143,7 +154,7 @@ while True:
                 print("Los valores de las multas deben ser numeros enteros")
             
         case 3:
-            
+            actualizar_multa(input("Ingrese el codigo del libro el cual desea actualizar su multa: "), input("Ingrese la nueva multa de el libro siendo modificado: "),prestamos)
         case 4:
             codigo = input("Ingrese el CODIGO del libro a agregar: ")
             if not validar_codigo(codigo,libros,prestamos):
