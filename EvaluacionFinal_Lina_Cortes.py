@@ -106,17 +106,24 @@ def busqueda_multa(multa_min, multa_max,dict_libros, dict_prestamos):
         
 def buscar_codigo(codigo,dict_libros):
     for codigo_libro in dict_libros.keys():
-        if codigo == codigo_libro:
+        if codigo.upper() == codigo_libro.upper():
             return True
     return False
 
 def actualizar_multa(codigo,nueva_multa,dict_prestamos):
-    if buscar_codigo(codigo,libros):
-        dict_prestamos[codigo][0] = nueva_multa
+    if buscar_codigo(codigo.upper(),libros):
+        dict_prestamos[codigo.upper()][0] = nueva_multa
         return True
     else:
         return False
 
+def eliminar_libro(codigo,dict_libros,dict_prestamos):
+    if buscar_codigo(codigo.upper(),libros):
+        dict_libros.pop(codigo.upper())
+        dict_prestamos.pop(codigo.upper())
+        return True
+    else:
+        return False
 libros = {
 'L001': ['Sombras del Sur', 'A. Rojas', 'novela', 2019,
 'AndesPress', False],
@@ -154,7 +161,14 @@ while True:
                 print("Los valores de las multas deben ser numeros enteros")
             
         case 3:
-            actualizar_multa(input("Ingrese el codigo del libro el cual desea actualizar su multa: "), input("Ingrese la nueva multa de el libro siendo modificado: "),prestamos)
+            try:
+                nueva_multa_ingresada = int(input("Ingrese la nueva multa de el libro siendo modificado: "))
+            except ValueError:
+                print("La nueva multa ingresada debe ser un numero entero")
+            if nueva_multa_ingresada <= 0:
+                print("La nueva multa debe ser mayor a 0")
+            else:
+                actualizar_multa(input("Ingrese el codigo del libro el cual desea actualizar su multa: "),nueva_multa_ingresada ,prestamos)
         case 4:
             codigo = input("Ingrese el CODIGO del libro a agregar: ")
             if not validar_codigo(codigo,libros,prestamos):
@@ -215,10 +229,8 @@ while True:
                 print("Libro Agregado Correctamente")
             else:
                 print("El libro no se ha podido agregar")
-            print(prestamos)
-            print(libros)
         case 5:
-            pass
+            eliminar_libro(input("Ingrese el codigo del libro que desea eliminar de la base de datos: "),libros,prestamos)
         case 6:
             break
 
