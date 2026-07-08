@@ -81,11 +81,52 @@ def agregar_libro(codigo, titulo, autor, genero, anio, editorial, es_novedad, pr
     libros[codigo] = [titulo,autor,genero,anio,editorial,es_novedad]
     prestamos[codigo] = [precio_multa,copias_disponibles]
     return True
-libros = {
+def busqueda_multa(multa_min, multa_max,dict_libros, dict_prestamos):
+    if multa_min < 0 or multa_max < 0:
+        print("Las multas ingresadas no pueden ser menores a 0")
+    elif multa_min > multa_max:
+        print("La multa minima no puede superar el valor de la multa maxima")
+    else:
+        lista_multa = []
+        for codigo_prestamo,prestamo in dict_prestamos.items():
+            if prestamo[0] >= multa_min and prestamo[0] <= multa_max:
+                if prestamo[1] > 0:
+                    for codigo_libro, libro in dict_libros.items():
+                        if codigo_prestamo == codigo_libro:
+                            string_libro = ""
+                            string_libro += libro[0]
+                            string_libro += "--"
+                            string_libro += codigo_libro
+                            lista_multa.append(string_libro)
+                            break
+        if not lista_multa:
+            print("No hay libros en ese rango de multa")
+        else:
+            print(sorted(lista_multa))
+        
 
+
+libros = {
+'L001': ['Sombras del Sur', 'A. Rojas', 'novela', 2019,
+'AndesPress', False],
+'L002': ['Python en Ruta', 'M. Diaz', 'tecnología', 2023,
+'CodeBooks', True],
+'L003': ['Mar y Viento', 'C. Silva', 'poesía', 2017, 'Litoral',
+False],
+'L004': ['Historia Breve', 'J. Pérez', 'historia', 2015,
+'Cronos', False],
+'L005': ['Mundos Lejanos', 'L. Torres', 'ciencia ficción', 2021,
+'Orión', True],
+'L006': ['Cocina Simple', 'R. Soto', 'cocina', 2018, 'Sabores',
+False]
 }
 prestamos = {
-
+'L001': [500, 4],
+'L002': [700, 0],
+'L003': [300, 10],
+'L004': [400, 2],
+'L005': [600, 1],
+'L006': [350, 6]
 }
 
 while True:
@@ -96,9 +137,13 @@ while True:
         case 1:
             copias_genero(input("Ingrese el genero del cual desea encontrar copias de libros").lower(),libros,prestamos)
         case 2:
-            pass
+            try:
+               busqueda_multa(int(input("Ingrese la multa minima para la busqueda: ")),int(input("Ingrese la multa maxima para la busqueda: ")),libros,prestamos)
+            except ValueError:
+                print("Los valores de las multas deben ser numeros enteros")
+            
         case 3:
-            pass
+            
         case 4:
             codigo = input("Ingrese el CODIGO del libro a agregar: ")
             if not validar_codigo(codigo,libros,prestamos):
